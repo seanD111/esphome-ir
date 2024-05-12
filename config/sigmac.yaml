@@ -1,0 +1,86 @@
+esphome:
+  name: sigmac
+  friendly_name: sigmac
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "Dk0K87XvK5YlqylWH1f6QUg9PbyQsIywuLl4cYp0Qx0="
+
+ota:
+  password: "58d234f1f0bea52c18dfeb3729ef21c2"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+
+remote_receiver:
+  pin:
+    number: GPIO2
+    inverted: true
+  dump: all
+
+remote_transmitter:
+  pin: GPIO15
+  carrier_duty_percent: 50%
+
+# Example configuration entry
+web_server:
+  port: 80
+
+button:
+  - platform: template
+    name: "On/Off JVC"
+    on_press:
+      - remote_transmitter.transmit_jvc:
+          data: 0x02FD
+  - platform: template
+    name: "On/Off LG"
+    on_press:
+      - remote_transmitter.transmit_lg:
+          data: 0x02FD48B7
+          nbits: 32
+  - platform: template
+    name: "On/Off NEC"
+    on_press:
+      - remote_transmitter.transmit_nec:
+          address: 0xBF40
+          command: 0xED12
+  - platform: template
+    name: "On/Off Pioneer"
+    on_press:
+      - remote_transmitter.transmit_pioneer:
+          rc_code_1: 0x0212
+
+  - platform: template
+    name: "On/Off Pronto"
+    on_press:
+      - remote_transmitter.transmit_pronto:
+          data: "0000 006D 0012 0000 0141 00A3 0012 0017 0012 0016 0014 0015 0013 0016 0013 0017 0012 0017 0012 0044 0013 0015 0014 0043 0013 0044 0013 0045 0012 0044 0013 0044 0012 0044 0012 0017 0012 0044 0013 0181 06C3"
+
+  - platform: template
+    name: "Yamaha On/Off Pronto"
+    on_press:
+      - remote_transmitter.transmit_pronto:
+          data: "0000 006D 0000 0002 0000 00A9 0000 0014 0000 003E 0000 0014 0000 003E 0000 003E 0000 003E 0000 003E 0000 0014 0000 003E 0000 0014 0000 003E 0000 0014 0000 0014 0000 0014 0000 0014 0000 003E 0000 0014 0000 003E 0000 003E 0000 0014 0000 003E 0000 0014 0000 003E 0000 0014 0000 003E 0000 0014 0000 0014 0000 003E 0000 0014 0000 003E 0000 0014 0000 003E 0000 05E5 0000 0054 0000 0E20"
+
+  - platform: template
+    name: "Yamaha DVD Pronto"
+    on_press:
+      - remote_transmitter.transmit_pronto:
+          data: "0000 006b 0022 0002 0153 00b4 0016 0016 0016 0016 0016 0041 0016 0041 0016 0016 0016 0041 0016 0016 0016 0041 0016 0041 0016 0041 0016 0016 0016 0016 0016 0041 0016 0016 0016 0041 0016 0016 0016 0016 0016 0016 0016 0041 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0041 0016 0041 0016 0016 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 0016 05fe 0153 0055 0016 0e78"
+
+  - platform: template
+    name: "Yamaha TV Pronto"
+    on_press:
+      - remote_transmitter.transmit_pronto:
+          data: "0000 006b 0022 0002 0154 00b4 0016 0016 0016 0016 0016 0042 0016 0042 0016 0016 0016 0042 0016 0016 0016 0042 0016 0042 0016 0042 0016 0016 0016 0016 0016 0042 0016 0016 0016 0042 0016 0016 0016 0042 0016 0016 0016 0042 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0042 0016 0016 0016 0042 0016 0042 0016 0042 0016 0042 0016 0042 0016 0602 0154 0055 0016 0e81"
